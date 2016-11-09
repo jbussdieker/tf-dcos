@@ -1,0 +1,12 @@
+key_name = "johndoe"
+key_path = "~/.ssh/id_rsa"
+trusted_cidr = "79.4.14.81/32"
+
+master_count = "3"
+master_instance_size = "m4.large"
+
+agent_count = "8"
+agent_instance_size = "m4.large"
+
+agent_public_count = "3"
+agent_public_instance_size = "m4.large"
