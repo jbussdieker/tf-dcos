@@ -11,10 +11,10 @@ resource "aws_security_group" "base" {
   }
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["${var.trusted_cidr}"]
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = ["${aws_security_group.bootstrap.id}"]
   }
 }
 
@@ -28,6 +28,13 @@ resource "aws_security_group" "bootstrap" {
   name        = "bootstrap"
   description = "bootstrap"
   vpc_id      = "${aws_vpc.main.id}"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.trusted_cidr}"]
+  }
 
   ingress {
     from_port       = 80

@@ -3,7 +3,7 @@ resource "aws_instance" "agent" {
   ami           = "${var.ami}"
   instance_type = "${var.agent_instance_type}"
   key_name      = "${var.key_name}"
-  subnet_id     = "${aws_subnet.public.id}"
+  subnet_id     = "${aws_subnet.private.id}"
 
   vpc_security_group_ids = [
     "${aws_security_group.base.id}",
@@ -30,9 +30,11 @@ resource "null_resource" "agent" {
   count = "${var.agent_count}"
 
   connection {
-    host        = "${element(aws_instance.agent.*.public_ip, count.index)}"
-    user        = "core"
-    private_key = "${file("${var.key_path}")}"
+    bastion_host = "${aws_instance.bootstrap.public_ip}"
+    bastion_user = "core"
+    host         = "${element(aws_instance.agent.*.private_ip, count.index)}"
+    user         = "core"
+    private_key  = "${file("${var.key_path}")}"
   }
 
   provisioner "file" {

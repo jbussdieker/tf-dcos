@@ -30,9 +30,11 @@ resource "null_resource" "agent-public" {
   count = "${var.agent_public_count}"
 
   connection {
-    host        = "${element(aws_instance.agent-public.*.public_ip, count.index)}"
-    user        = "core"
-    private_key = "${file("${var.key_path}")}"
+    bastion_host = "${aws_instance.bootstrap.public_ip}"
+    bastion_user = "core"
+    host         = "${element(aws_instance.agent-public.*.private_ip, count.index)}"
+    user         = "core"
+    private_key  = "${file("${var.key_path}")}"
   }
 
   provisioner "file" {
